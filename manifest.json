@@ -1,0 +1,30 @@
+{
+  "name": "Ad Terminator",
+  "version": "1.0",
+  "manifest_version": 2,
+  "description": "广告终结者",
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "browser_action": {
+    "default_title": "",
+    "default_icon": "icon_128.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "scripts/contentscript.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}
