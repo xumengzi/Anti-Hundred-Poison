@@ -1,21 +1,28 @@
 // 净网行动, 从我做起
-// 把百毒相关的全部干掉
+// 把百毒相关的全部干掉, 
+// 宁可错杀一千,绝不放过一个
 location.host === "www.baidu.com" && clearBaidu();
 
 // 清除百毒相关
 function clearBaidu(){
   const removeList = [
     'content_right', 'u1', 'lg', 's_tab_inner', 'head_nums_cont_outer',
-    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug',
+    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug', 's_tab',
   ];
   let style = document.createElement('style');
   let str = '';
   for (let i in removeList) {
     let z = removeList[i];
-    str += `
-    #${z}{display:none!important}
-    .${z}{display:none!important}
-  `;
+    if (z === 's_tab'){
+      str += `
+        #${z}{visibility:hidden!important;opacity: 0!important}
+      `;
+    }else{
+      str += `
+        #${z}{display:none!important;opacity: 0!important}
+        .${z}{display:none!important;opacity: 0!important}
+      `;
+    }
   }
   let textNode = document.createTextNode(str);
   style.appendChild(textNode);
