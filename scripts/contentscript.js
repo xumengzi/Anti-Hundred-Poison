@@ -6,8 +6,8 @@ location.host === "www.baidu.com" && clearBaidu();
 // 清除百毒相关
 function clearBaidu(){
   const removeList = [
-    'content_right', 'u1', 'lg', 's_tab_inner', 'head_nums_cont_outer',
-    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug', 's_tab',
+    'content_right', 'u1', 's_top_wrap', 's_upfunc_menus', 's_wrap', 's_tab_inner', 'head_nums_cont_outer',
+    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug', 's_tab', 'bottom_layer', 'u_sp'
   ];
   let style = document.createElement('style');
   let str = '';
