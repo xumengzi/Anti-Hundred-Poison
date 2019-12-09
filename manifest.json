@@ -6,9 +6,6 @@
   "icons": {
     "128": "icon_128.png"
   },
-  "permissions": [
-    "storage"
-  ],
   "browser_action": {
     "default_title": "",
     "default_icon": "icon_128.png",
