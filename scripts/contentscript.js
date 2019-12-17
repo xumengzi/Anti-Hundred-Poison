@@ -41,21 +41,16 @@ function clearBaidu(){
       '百度理财', '百度游戏大全', '百度多酷棋牌', '百度天眼', '百度财富', '百度医生', 
       '百度德州扑克', '百度路淘', '百度聚聚', '百度滴答', '百度钱包', '百度体育新闻'
     ];
-
-    list.forEach(item => {
-      for (let i in keys) {
-        if (item.innerText.includes(keys[i])) {
-          item.remove();
+    let newArr = [list, list1];
+    for (let i in newArr) {
+      newArr[i].forEach(item => {
+        for (let i in keys) {
+          if (item.innerText.includes(keys[i])) {
+            item.remove();
+          }
         }
-      }
-    })
-    list1.forEach(item => {
-      for (let i in keys) {
-        if (item.innerText.includes(keys[i])) {
-          item.remove();
-        }
-      }
-    })
+      })
+    }
   };
 }
 
