@@ -7,7 +7,8 @@ location.host === "www.baidu.com" && clearBaidu();
 function clearBaidu(){
   const removeList = [
     'content_right', 'u1', 's_top_wrap', 's_upfunc_menus', 's_wrap', 's_tab_inner', 'head_nums_cont_outer',
-    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug', 's_tab', 'bottom_layer', 'u_sp'
+    'rs', 'u', 'foot', 'ftCon', 'qrcode', 'rs_top_new', 'bdsug', 's_tab', 'bottom_layer', 'u_sp', 's-top-left',
+    's-hotsearch-wrapper', 's_side_wrapper'
   ];
   let style = document.createElement('style');
   let str = '';
