@@ -134,7 +134,7 @@ function clearBaidu() {
 			} else {
 				const str = `padding: 2px 4px; box-shadow: rgb(204, 204, 204) 1px 1px 10px; border-radius: 4px; position: relative; overflow: hidden;`;
 				item.setAttribute("style", str);
-				isSafe(item);
+				// isSafe(item);
 			}
 		});
 	}
