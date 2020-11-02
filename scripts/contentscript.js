@@ -134,33 +134,8 @@ function clearBaidu() {
 			} else {
 				const str = `padding: 2px 4px; box-shadow: rgb(204, 204, 204) 1px 1px 10px; border-radius: 4px; position: relative; overflow: hidden;`;
 				item.setAttribute("style", str);
-				// isSafe(item);
 			}
 		});
-	}
-}
-
-function isSafe(dom) {
-	const safeList = ["nodejs"];
-	let bool =
-		dom.querySelector(".c-showurl") &&
-		dom.querySelector(".c-showurl").innerText.includes("nodejs");
-	if (bool) {
-		const cssStr = `
-      position: absolute;
-      right: -35px;
-      top: 8px;
-      width: 100px;
-      background: green;
-      color: #fff;
-      transform: rotate(45deg);
-      font-size: 12px;
-      text-align: center;
-  `;
-		let div = document.createElement("div");
-		div.innerText = "安全";
-		div.setAttribute("style", cssStr);
-		dom.appendChild(div);
 	}
 }
 
@@ -171,8 +146,6 @@ if (targetNode) {
 	let callback = function (mutationsList) {
 		mutationsList.forEach(function (item, index) {
 			if (item.type == "childList") {
-				clearBaidu();
-			} else if (item.type == "attributes") {
 				clearBaidu();
 			}
 		});
