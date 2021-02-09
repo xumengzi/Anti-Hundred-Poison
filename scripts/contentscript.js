@@ -123,6 +123,8 @@ function clearBaidu() {
 			"百度号码认证平台",
 			"百度商桥",
 			"有钱花",
+			"爱番番",
+			"FEX"
 		];
 		let newArr = [...list, ...list1];
 		newArr.forEach((item) => {
