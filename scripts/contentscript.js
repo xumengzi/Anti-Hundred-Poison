@@ -52,6 +52,7 @@ function clearBaidu() {
 	let list1 = document.querySelectorAll(".c-container");
 	if (list || list1) {
 		let keys = [
+			"广告",
 			"CSDN",
 			"baidu",
 			"百度文库",
