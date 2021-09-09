@@ -127,6 +127,7 @@ function clearBaidu() {
 			"爱番番",
 			"FEX",
 			"度小满金融",
+			"度小满钱包",
 			"www.apollo.auto/"
 		];
 		let newArr = [...list, ...list1];
@@ -137,7 +138,16 @@ function clearBaidu() {
 			if (isChecked) {
 				item.remove();
 			} else {
-				const str = `padding: 2px 4px; box-shadow: rgb(204, 204, 204) 1px 1px 10px; border-radius: 4px; position: relative; overflow: hidden;`;
+				const ran = Math.random() * 5 + 5;
+				const str = `
+					padding: 10px; 
+					box-shadow: rgb(204, 204, 204) 1px 1px 10px;
+					background: #fff;
+					border-radius: 4px; 
+					position: relative; 
+					overflow: hidden;
+				`;
+				item.setAttribute('data-green', 'good');
 				item.setAttribute("style", str);
 			}
 		});
