@@ -1,10 +1,13 @@
 // 净网行动, 从我做起
 // 把百毒相关的全部干掉,
 // 宁可错杀一千,绝不放过一个
-location.host === "www.baidu.com" && clearBaidu();
+if (location.host === "www.baidu.com") {
+	hideDom();
+	clearBaidu();
+}
 
-// 清除百毒相关
-function clearBaidu() {
+// 添加隐藏的style
+function hideDom() {
 	// 这里是清除百度页面相关广告
 	const removeList = [
 		"content_right",
@@ -27,6 +30,7 @@ function clearBaidu() {
 		"s-top-left",
 		"s-hotsearch-wrapper",
 		"s_side_wrapper",
+		"rs-table_3RiQc",
 	];
 	let style = document.createElement("style");
 	let str = "";
@@ -45,8 +49,11 @@ function clearBaidu() {
 	}
 	let textNode = document.createTextNode(str);
 	style.appendChild(textNode);
+	style.setAttribute('is-delete', 1);
 	document.head.appendChild(style);
-
+}
+// 清除百毒相关
+function clearBaidu() {
 	// 这里是清除百度百家号相关内容
 	let list = document.querySelectorAll(".result-op");
 	let list1 = document.querySelectorAll(".c-container");
@@ -138,7 +145,6 @@ function clearBaidu() {
 			if (isChecked) {
 				item.remove();
 			} else {
-				const ran = Math.random() * 5 + 5;
 				const str = `
 					padding: 10px; 
 					box-shadow: rgb(204, 204, 204) 1px 1px 10px;
@@ -147,7 +153,6 @@ function clearBaidu() {
 					position: relative; 
 					overflow: hidden;
 				`;
-				item.setAttribute('data-green', 'good');
 				item.setAttribute("style", str);
 			}
 		});
@@ -157,9 +162,12 @@ function clearBaidu() {
 //监听dom变化, 然后干掉百毒
 let targetNode = document.getElementById("wrapper_wrapper");
 if (targetNode) {
-	let config = { attributes: true, childList: true, subtree: true };
+	let config = { attributes: false, childList: true, subtree: false };
 	let callback = function (mutationsList) {
-		mutationsList.forEach(function (item, index) {
+		if (!(document.querySelectorAll("style[is-delete='1']") && document.querySelectorAll("style[is-delete='1']").length)) {
+			hideDom();
+		}
+		mutationsList.forEach(function (item) {
 			if (item.type == "childList") {
 				clearBaidu();
 			}

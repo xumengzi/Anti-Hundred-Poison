@@ -1,12 +1,12 @@
 {
   "name": "Ad Terminator",
   "version": "1.2",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "description": "广告终结者",
   "icons": {
     "128": "icon_128.png"
   },
-  "browser_action": {
+  "action": {
     "default_title": "",
     "default_icon": "icon_128.png",
     "default_popup": "popup.html"
