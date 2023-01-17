@@ -135,7 +135,9 @@ function clearBaidu() {
 			"FEX",
 			"度小满金融",
 			"度小满钱包",
-			"www.apollo.auto/"
+			"www.apollo.auto/",
+			"百度短网址",
+			"百度营销"
 		];
 		let newArr = [...list, ...list1];
 		newArr.forEach((item) => {
