@@ -19,6 +19,7 @@ function hideDom() {
 		"head_nums_cont_outer",
 		"rs",
 		"u",
+		"searchTag",
 		"foot",
 		"ftCon",
 		"qrcode",
@@ -137,7 +138,8 @@ function clearBaidu() {
 			"度小满钱包",
 			"www.apollo.auto/",
 			"百度短网址",
-			"百度营销"
+			"百度营销",
+			"百家号"
 		];
 		let newArr = [...list, ...list1];
 		newArr.forEach((item) => {
