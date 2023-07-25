@@ -139,7 +139,8 @@ function clearBaidu() {
 			"www.apollo.auto/",
 			"百度短网址",
 			"百度营销",
-			"百家号"
+			"百家号",
+			'百度健康'
 		];
 		let newArr = [...list, ...list1];
 		newArr.forEach((item) => {
