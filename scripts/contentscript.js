@@ -163,6 +163,7 @@ function hideDom() {
     "hd-rtools",
     "rs-top",
     "right",
+    "placeholder",
   ];
   let style = document.createElement("style");
   let str = "";
