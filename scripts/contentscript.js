@@ -164,6 +164,7 @@ function hideDom() {
     "rs-top",
     "right",
     "placeholder",
+    "lm-new",
   ];
   let style = document.createElement("style");
   let str = "";
