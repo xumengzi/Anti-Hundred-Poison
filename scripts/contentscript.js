@@ -166,6 +166,9 @@ function hideDom() {
     "placeholder",
     "lm-new",
   ];
+
+  // 需要移除父节点
+  const removeParentNode = ["#carousel"];
   let style = document.createElement("style");
   let str = "";
   for (let i in removeList) {
@@ -181,6 +184,15 @@ function hideDom() {
       `;
     }
   }
+
+  for (let i in removeParentNode) {
+    let k = removeParentNode[i];
+    const domlist = document.querySelectorAll(k);
+    domlist.forEach((item) => {
+      item.parentNode.style.display = "none";
+    });
+  }
+
   let textNode = document.createTextNode(str);
   style.appendChild(textNode);
   style.setAttribute("is-delete", 1);
@@ -200,15 +212,17 @@ function clearBaidu() {
       if (isChecked) {
         item.remove();
       } else {
-        const str = `
+        if (item.className === "c-container") {
+          const str = `
 					padding: 10px; 
 					box-shadow: rgb(204, 204, 204) 1px 1px 10px;
 					background: #fff;
-					border-radius: 4px; 
+					border-radius: 8px; 
 					position: relative; 
 					overflow: hidden;
 				`;
-        item.setAttribute("style", str);
+          item.setAttribute("style", str);
+        }
       }
     });
   }
