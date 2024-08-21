@@ -9,6 +9,7 @@ const domainNameList = [
 ];
 
 let keys = [];
+let tplList = [];
 if (domainNameList.includes(location.host)) {
   keys = [
     "广告",
@@ -103,6 +104,7 @@ if (domainNameList.includes(location.host)) {
     "百度页游中心",
     "百度App",
   ];
+  tplList = ["wenda_generate"];
 }
 
 if (location.host === "www.baidu.com") {
@@ -209,18 +211,22 @@ function clearBaidu() {
       let isChecked = keys.find((ele) => {
         return item.innerText.includes(ele);
       });
+      const tpl = item.getAttribute("tpl");
+      const isTpl = tplList.includes(tpl);
       if (isChecked) {
         item.remove();
       } else {
-        if (item.className === "c-container") {
+        if (isTpl) {
+          item.remove();
+        } else if (item.className === "c-container") {
           const str = `
-					padding: 10px; 
-					box-shadow: rgb(204, 204, 204) 1px 1px 10px;
-					background: #fff;
-					border-radius: 8px; 
-					position: relative; 
-					overflow: hidden;
-				`;
+            padding: 10px; 
+            box-shadow: rgb(204, 204, 204) 1px 1px 10px;
+            background: #fff;
+            border-radius: 8px; 
+            position: relative; 
+            overflow: hidden;
+          `;
           item.setAttribute("style", str);
         }
       }
