@@ -167,6 +167,7 @@ function hideDom() {
     "right",
     "placeholder",
     "lm-new",
+    "rs_new",
   ];
 
   // 需要移除父节点
