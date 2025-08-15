@@ -169,7 +169,11 @@ function hideDom() {
     "lm-new",
     "rs_new",
     "s_new_search_guide",
+    "main-wrapper",
   ];
+
+  // 显示相关节点
+  const showList = ["form"];
 
   // 需要移除父节点
   const removeParentNode = ["#carousel"];
@@ -187,6 +191,14 @@ function hideDom() {
         .${z}{display:none!important;opacity: 0!important}
       `;
     }
+  }
+
+  for (let i in showList) {
+    let z = showList[i];
+    str += `
+        #${z}{display:block!important;opacity: 1!important}
+        .${z}{display:block!important;opacity: 1!important}
+      `;
   }
 
   for (let i in removeParentNode) {
