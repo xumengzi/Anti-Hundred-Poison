@@ -1,22 +1,35 @@
-# Anti-Hundred-Poison
+# Anti-Hundred-Poison · 还搜索引擎一片清净
 
-这是一款可以让你的**百度**，**Bing**，**搜狗**，**360 搜索**清净的【谷歌插件】，可以屏蔽**百家号**，**csdn**等相关内容。屏蔽高效，完全免费。
+> 一款轻量的 Chrome 插件，屏蔽 **百度 / Bing / 搜狗 / 360 搜索** 结果里的 **百家号、CSDN、广告** 等低质内容。持续维护 5 年，完全免费。
 
-_如果你知道油猴，那么你可以[戳这里](https://greasyfork.org/zh-CN/scripts/455226-anti-hundred-poison-%E5%B1%8F%E8%94%BD%E7%99%BE%E5%BA%A6%E7%9B%B8%E5%85%B3%E7%9A%84%E8%84%9A%E6%9C%AC)安装屏蔽广告的油猴插件_
+[![Stars](https://img.shields.io/github/stars/xumengzi/Anti-Hundred-Poison?style=social)](https://github.com/xumengzi/Anti-Hundred-Poison/stargazers)
+[![License](https://img.shields.io/github/license/xumengzi/Anti-Hundred-Poison)](./LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/xumengzi/Anti-Hundred-Poison)](https://github.com/xumengzi/Anti-Hundred-Poison/commits/master)
+[![Issues](https://img.shields.io/github/issues/xumengzi/Anti-Hundred-Poison)](https://github.com/xumengzi/Anti-Hundred-Poison/issues)
 
-## 安装插件会屏蔽包括但不限于
+搜索一个技术关键词，首屏 10 条结果 —— 7 条广告、百家号、CSDN 复读。装上它，世界清净了。
 
-1. 搜索引擎首页无关于搜索的按钮，广告之类，重点屏蔽了百毒搜索
-2. 百度全家桶(类似百度知道，百度文库，百度百科，百度系列)
-3. 搜索界面一些设置按钮
-4. 另外着重屏蔽了`CSDN`，如有冒犯，请勿使用
+## 效果一览
+
+![搜索结果对比](./imgs/4.png)
+
+![百度首页净化](./imgs/1.png)
+
+## 快速安装
+
+- 🧩 **Chrome 用户**：见下方 [安装方法](#安装方法)（Chrome 商店版本上架中）
+- 🐒 **油猴用户**：[戳这里安装 Greasy Fork 脚本版](https://greasyfork.org/zh-CN/scripts/455226-anti-hundred-poison-%E5%B1%8F%E8%94%BD%E7%99%BE%E5%BA%A6%E7%9B%B8%E5%85%B3%E7%9A%84%E8%84%9A%E6%9C%AC)
+
+> 觉得世界清净了？麻烦点个 ⭐ **Star** 让更多被百度广告折磨的朋友看到 🙏
+
+## 屏蔽范围
+
+1. 搜索引擎首页与搜索无关的按钮 / 广告 / 热搜等元素，重点净化百度
+2. 百度全家桶（百度知道、百度文库、百度百科等系列站点）
+3. 搜索页顶部、右侧的推广位与设置项
+4. 着重屏蔽 **CSDN**（如有冒犯，请勿使用）
 
 > 仅推荐专业人士使用，不承担任何后果
-
-## 看看最终效果，清爽简洁，干净了许多
-
-![百度首页](./imgs/1.png)
-![js教程](./imgs/4.png)
 
 ## 安装方法
 
