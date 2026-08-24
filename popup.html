@@ -1,18 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>百度终结者</title>
-  <style>
-    #app{
-      width: 200px;
-    }
-  </style>
-</head>
-<body>
-  <div id="app">
-    <h2>消灭百度广告</h2>
-    <h4>干掉百度全家桶</h4>
-  </div>
-</body>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>广告终结者</title>
+    <link rel="stylesheet" href="styles/popup.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <h2>消灭百度广告</h2>
+        <div class="stat">
+          本页已屏蔽 <span id="count">0</span> 条
+          <span id="countDetail" class="muted"></span>
+        </div>
+      </header>
+
+      <section class="row">
+        <label class="switch">
+          <input type="checkbox" id="siteEnabled" />
+          <span>本站启用屏蔽</span>
+        </label>
+      </section>
+
+      <footer>
+        <div id="tip"></div>
+        <div class="muted">仅在受支持的搜索引擎生效</div>
+      </footer>
+    </div>
+    <script src="scripts/popup.js"></script>
+  </body>
 </html>

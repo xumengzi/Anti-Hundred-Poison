@@ -1,27 +1,53 @@
 {
   "name": "Ad Terminator",
-  "version": "1.2",
+  "version": "1.4",
   "manifest_version": 3,
   "description": "广告终结者",
   "icons": {
     "128": "icon_128.png"
   },
   "action": {
-    "default_title": "",
+    "default_title": "Ad Terminator",
     "default_icon": "icon_128.png",
     "default_popup": "popup.html"
+  },
+  "permissions": ["storage", "webNavigation", "activeTab"],
+  "background": {
+    "service_worker": "scripts/background.js"
   },
   "content_scripts": [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "*://www.baidu.com/*",
+        "*://www.bing.com/*",
+        "*://www.so.com/*",
+        "*://www.sogou.com/*"
       ],
+      "css": ["styles/hide.css"],
       "js": [
-        "scripts/contentscript.js"
+        "scripts/common/utils.js",
+        "scripts/common/settings.js",
+        "scripts/common/counter.js",
+        "scripts/common/staticCounter.js",
+        "scripts/common/cleaner.js",
+        "scripts/sites/baidu.js",
+        "scripts/sites/bing.js",
+        "scripts/sites/other.js",
+        "scripts/main.js"
       ],
-      "run_at": "document_idle",
+      "run_at": "document_start",
       "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["rules/*.json"],
+      "matches": [
+        "*://www.baidu.com/*",
+        "*://www.bing.com/*",
+        "*://www.so.com/*",
+        "*://www.sogou.com/*"
+      ]
     }
   ]
 }

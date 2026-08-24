@@ -1,0 +1,57 @@
+{
+  "hide": {
+    "displayNone": [
+      "content_right",
+      "u1",
+      "s_top_wrap",
+      "s_upfunc_menus",
+      "s_wrap",
+      "s_tab_inner",
+      "head_nums_cont_outer",
+      "rs",
+      "u",
+      "searchTag",
+      "foot",
+      "ftCon",
+      "qrcode",
+      "tsn_inner",
+      "rs_top_new",
+      "bdsug",
+      "bottom_layer",
+      "u_sp",
+      "s-top-left",
+      "s-hotsearch-wrapper",
+      "s_side_wrapper",
+      "rs-table_3RiQc",
+      "b_context",
+      "id_h",
+      "b_scopebar",
+      "b_phead_chat",
+      "scroll_cont",
+      "cdxConv",
+      "b_vList",
+      "card_container",
+      "often_so",
+      "side",
+      "hd-rtools",
+      "rs-top",
+      "right",
+      "placeholder",
+      "lm-new",
+      "rs_new",
+      "s_new_search_guide",
+      "main-wrapper"
+    ],
+    "visibilityHidden": ["s_tab"],
+    "forceShow": ["form"],
+    "removeParent": ["#carousel"]
+  },
+  "resultSelectors": {
+    "baidu": ".result-op, .c-container",
+    "bing": ".b_algo"
+  },
+  "cardStyle": {
+    "baidu": "padding:10px;box-shadow:rgb(204,204,204) 1px 1px 10px;background:#fff;border-radius:8px;position:relative;overflow:hidden;",
+    "bing": "padding:10px;box-shadow:rgb(204,204,204) 1px 1px 10px;background:#fff;border-radius:4px;position:relative;overflow:hidden;"
+  }
+}

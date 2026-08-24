@@ -1,0 +1,67 @@
+/* Anti-Hundred-Poison 静态隐藏样式
+ * 在 document_start 阶段就注入，避免广告闪现。
+ * 所有规则限定在 html.ahp-on 下，用户在 popup 关闭本站后，
+ * content script 会移除该 class，静态 CSS 自动失效。
+ * 保持与原逻辑完全一致：
+ *   - removeList 里的元素：display:none
+ *   - s_tab 特殊处理：visibility:hidden + opacity:0（保留占位）
+ *   - showList 里的元素：强制显示
+ * 使用 id/class 双选择器，因为原脚本对两者都做了处理。
+ */
+
+/* ===== 通用隐藏（display:none） ===== */
+html.ahp-on #content_right, html.ahp-on .content_right,
+html.ahp-on #u1, html.ahp-on .u1,
+html.ahp-on #s_top_wrap, html.ahp-on .s_top_wrap,
+html.ahp-on #s_upfunc_menus, html.ahp-on .s_upfunc_menus,
+html.ahp-on #s_wrap, html.ahp-on .s_wrap,
+html.ahp-on #s_tab_inner, html.ahp-on .s_tab_inner,
+html.ahp-on #head_nums_cont_outer, html.ahp-on .head_nums_cont_outer,
+html.ahp-on #rs, html.ahp-on .rs,
+html.ahp-on #u, html.ahp-on .u,
+html.ahp-on #searchTag, html.ahp-on .searchTag,
+html.ahp-on #foot, html.ahp-on .foot,
+html.ahp-on #ftCon, html.ahp-on .ftCon,
+html.ahp-on #qrcode, html.ahp-on .qrcode,
+html.ahp-on #tsn_inner, html.ahp-on .tsn_inner,
+html.ahp-on #rs_top_new, html.ahp-on .rs_top_new,
+html.ahp-on #bdsug, html.ahp-on .bdsug,
+html.ahp-on #bottom_layer, html.ahp-on .bottom_layer,
+html.ahp-on #u_sp, html.ahp-on .u_sp,
+html.ahp-on #s-top-left, html.ahp-on .s-top-left,
+html.ahp-on #s-hotsearch-wrapper, html.ahp-on .s-hotsearch-wrapper,
+html.ahp-on #s_side_wrapper, html.ahp-on .s_side_wrapper,
+html.ahp-on #rs-table_3RiQc, html.ahp-on .rs-table_3RiQc,
+html.ahp-on #b_context, html.ahp-on .b_context,
+html.ahp-on #id_h, html.ahp-on .id_h,
+html.ahp-on #b_scopebar, html.ahp-on .b_scopebar,
+html.ahp-on #b_phead_chat, html.ahp-on .b_phead_chat,
+html.ahp-on #scroll_cont, html.ahp-on .scroll_cont,
+html.ahp-on #cdxConv, html.ahp-on .cdxConv,
+html.ahp-on #b_vList, html.ahp-on .b_vList,
+html.ahp-on #card_container, html.ahp-on .card_container,
+html.ahp-on #often_so, html.ahp-on .often_so,
+html.ahp-on #side, html.ahp-on .side,
+html.ahp-on #hd-rtools, html.ahp-on .hd-rtools,
+html.ahp-on #rs-top, html.ahp-on .rs-top,
+html.ahp-on #right, html.ahp-on .right,
+html.ahp-on #placeholder, html.ahp-on .placeholder,
+html.ahp-on #lm-new, html.ahp-on .lm-new,
+html.ahp-on #rs_new, html.ahp-on .rs_new,
+html.ahp-on #s_new_search_guide, html.ahp-on .s_new_search_guide,
+html.ahp-on #main-wrapper, html.ahp-on .main-wrapper {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* ===== 特殊：s_tab 用 visibility 隐藏（保留占位，避免布局跳动） ===== */
+html.ahp-on #s_tab {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* ===== 强制显示（覆盖百度可能的隐藏样式） ===== */
+html.ahp-on #form, html.ahp-on .form {
+  display: block !important;
+  opacity: 1 !important;
+}
