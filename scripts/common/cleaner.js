@@ -1,14 +1,14 @@
 // 通用条目清理器：抽取 baidu / bing 的公共逻辑
-// - 命中黑名单关键词 或 命中 tpl 白名单 → 隐藏（display:none）而非 remove，可通过 popup 恢复
-// - 未命中命中白名单则跳过
-// - 未命中但为主容器 → 添加卡片样式
-// - 使用 WeakSet 避免 Observer 重复处理
+// - 命中黑名单关键词或命中 tpl 列表时隐藏，可通过 popup 临时恢复
+// - 白名单优先，内容改变或翻页复用节点时会重新检查
+// - 未命中的主容器添加卡片样式
 
 (function () {
   const AHP = (window.__AHP__ = window.__AHP__ || {});
   const HIDE_ATTR = "data-ahp-hidden";
   const DONE_ATTR = "data-ahp-done";
   let revealMode = false;
+  let evaluationGeneration = 0;
 
   function buildCleaner({
     selector,
@@ -18,37 +18,50 @@
     cardStyle,
     isCardTarget,
   }) {
-    const processed = new WeakSet();
+    const signatures = new WeakMap();
 
     return function clean() {
+      document.querySelectorAll("[" + HIDE_ATTR + "]").forEach((item) => {
+        if (!item.matches(selector)) show(item);
+      });
+
       const list = document.querySelectorAll(selector);
       for (const item of list) {
-        if (processed.has(item)) continue;
-        processed.add(item);
-
         const text = item.textContent || "";
-        // 白名单优先：命中白名单则保留
+        const tpl = item.getAttribute && item.getAttribute("tpl");
+        const signature = `${evaluationGeneration}\u0000${tpl || ""}\u0000${item.className || ""}\u0000${text}`;
+        if (signatures.get(item) === signature) continue;
+        signatures.set(item, signature);
+
+        // 白名单优先：命中白名单则保留。
         if (whiteReg && whiteReg.test(text)) {
+          show(item);
           decorate(item);
           continue;
         }
 
-        const tpl = item.getAttribute && item.getAttribute("tpl");
         const isTpl = tplList && tpl && tplList.includes(tpl);
-
         if (isTpl || (blackReg && blackReg.test(text))) {
           hide(item);
           continue;
         }
 
+        show(item);
         decorate(item);
       }
+
+      if (AHP.counter) AHP.counter.setDynamic(getHiddenCount());
 
       function hide(el) {
         if (revealMode || el.getAttribute(HIDE_ATTR)) return;
         el.setAttribute(HIDE_ATTR, "1");
         el.style.setProperty("display", "none", "important");
-        AHP.counter && AHP.counter.add(1);
+      }
+
+      function show(el) {
+        if (!el.getAttribute(HIDE_ATTR)) return;
+        el.style.removeProperty("display");
+        el.removeAttribute(HIDE_ATTR);
       }
 
       function decorate(el) {
@@ -81,11 +94,18 @@
     return revealMode;
   }
 
+  function resetRevealMode(forceRecheck = false) {
+    if (!revealMode && !forceRecheck) return;
+    revealMode = false;
+    evaluationGeneration += 1;
+  }
+
   AHP.cleaner = {
     buildCleaner,
     unhideAll,
     getHiddenCount,
     isRevealMode,
+    resetRevealMode,
     HIDE_ATTR,
   };
 })();

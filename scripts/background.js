@@ -51,11 +51,22 @@ chrome.tabs.onRemoved.addListener((tabId) => {
   tabStats.delete(tabId);
 });
 
-// 页面刷新 / 导航开始时清零
-chrome.webNavigation &&
-  chrome.webNavigation.onCommitted &&
-  chrome.webNavigation.onCommitted.addListener((details) => {
-    if (details.frameId !== 0) return;
-    tabStats.set(details.tabId, { total: 0, dynamic: 0, staticCount: 0 });
-    setBadge(details.tabId, 0);
+function clearTabStat(tabId) {
+  tabStats.set(tabId, { total: 0, dynamic: 0, staticCount: 0 });
+  setBadge(tabId, 0);
+}
+
+// 完整页面导航时清零；新文档会重新注入 content script。
+chrome.webNavigation.onCommitted.addListener((details) => {
+  if (details.frameId !== 0) return;
+  clearTabStat(details.tabId);
+});
+
+// 搜索站点的 SPA 翻页不会重新注入脚本，通知现有页面恢复净化并重新扫描。
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  if (details.frameId !== 0) return;
+  clearTabStat(details.tabId);
+  chrome.tabs.sendMessage(details.tabId, { type: "AHP_PAGE_CHANGED" }, () => {
+    void chrome.runtime.lastError;
   });
+});

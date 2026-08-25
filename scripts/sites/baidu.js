@@ -33,16 +33,26 @@
       removeParents();
     });
 
-    const target =
-      document.getElementById("content_left") ||
-      document.getElementById("wrapper_wrapper") ||
-      document.body;
-
+    // 百度翻页可能整体替换结果容器，因此监听稳定的文档根节点。
+    // 同时处理复用卡片的文本更新，并在同文档导航后恢复默认净化状态。
+    const target = document.documentElement;
     if (!target) return;
 
+    let lastUrl = location.href;
     const observer = new MutationObserver((list) => {
-      for (const m of list) {
-        if (m.type === "childList" && m.addedNodes.length) {
+      const urlChanged = location.href !== lastUrl;
+      if (urlChanged) {
+        lastUrl = location.href;
+        AHP.cleaner.resetRevealMode();
+      }
+
+      for (const mutation of list) {
+        if (
+          urlChanged ||
+          mutation.type === "characterData" ||
+          mutation.type === "attributes" ||
+          mutation.type === "childList"
+        ) {
           throttled();
           break;
         }
@@ -50,9 +60,13 @@
     });
 
     observer.observe(target, {
-      attributes: false,
       childList: true,
       subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["class", "tpl"],
     });
+
+    return throttled;
   };
 })();

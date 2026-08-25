@@ -22,6 +22,7 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
   const siteKey = SITE_MAP[HOST];
   if (!siteKey) return;
   let runtimeStatus = "initializing";
+  let refreshPage = null;
 
   // 同一站点的开关变化时，各标签页自行刷新，避免申请额外 tabs 权限。
   chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -43,6 +44,14 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
         : { total: 0, dynamic: 0, staticCount: 0 };
       sendResponse({ ok: true, n, stat, revealing: true });
       return; // 同步响应
+    }
+    if (msg.type === "AHP_PAGE_CHANGED") {
+      if (AHP.cleaner) AHP.cleaner.resetRevealMode(true);
+      if (typeof refreshPage === "function") {
+        refreshPage();
+        setTimeout(refreshPage, 100);
+      }
+      return;
     }
     if (msg.type === "AHP_QUERY_COUNT") {
       if (AHP.cleaner && AHP.counter) {
@@ -104,7 +113,8 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
     const runner = AHP.sites && AHP.sites[siteKey];
     if (typeof runner === "function") {
       try {
-        runner({ rules, selectors, blackReg, whiteReg, settings });
+        const refresh = runner({ rules, selectors, blackReg, whiteReg, settings });
+        refreshPage = typeof refresh === "function" ? refresh : null;
         runtimeStatus = "ready";
       } catch (error) {
         runtimeStatus = "error";

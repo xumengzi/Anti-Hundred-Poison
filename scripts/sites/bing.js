@@ -17,16 +17,36 @@
 
     clean();
 
-    // Bing 也做一轮弱监听，防止无限滚动追加结果
+    // 监听稳定的文档根节点，兼容结果容器替换、无限滚动和同文档翻页。
     const throttled = AHP.utils.rafThrottle(clean);
+    let lastUrl = location.href;
     const observer = new MutationObserver((list) => {
-      for (const m of list) {
-        if (m.type === "childList" && m.addedNodes.length) {
+      const urlChanged = location.href !== lastUrl;
+      if (urlChanged) {
+        lastUrl = location.href;
+        AHP.cleaner.resetRevealMode();
+      }
+
+      for (const mutation of list) {
+        if (
+          urlChanged ||
+          mutation.type === "characterData" ||
+          mutation.type === "attributes" ||
+          mutation.type === "childList"
+        ) {
           throttled();
           break;
         }
       }
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+      attributeFilter: ["class", "tpl"],
+    });
+
+    return throttled;
   };
 })();
