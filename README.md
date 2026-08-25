@@ -1,6 +1,8 @@
-# Anti-Hundred-Poison · 还搜索引擎一片清净
+# Ad Terminator · 还搜索引擎一片清净
 
 > 一款轻量的 Chrome 插件，屏蔽 **百度 / Bing / 搜狗 / 360 搜索** 结果里的 **百家号、CSDN、广告** 等低质内容。持续维护 5 年，完全免费。
+
+[项目主页](https://github.com/xumengzi/Anti-Hundred-Poison) · [反馈误拦截](https://github.com/xumengzi/Anti-Hundred-Poison/issues/new) · [隐私说明](#隐私说明)
 
 [![Stars](https://img.shields.io/github/stars/xumengzi/Anti-Hundred-Poison?style=social)](https://github.com/xumengzi/Anti-Hundred-Poison/stargazers)
 [![License](https://img.shields.io/github/license/xumengzi/Anti-Hundred-Poison)](./LICENSE)
@@ -71,7 +73,21 @@ Q：为何只屏蔽百度相关的插件？？？？？？？？？？？？？?
 
 A：讨厌这些
 
+## 隐私说明
+
+Ad Terminator 在本地读取搜索页面内容以匹配净化规则，不收集或上传搜索词、浏览记录及页面正文。站点开关和后续的自定义规则保存在 `chrome.storage.sync` 中，可能通过用户登录的 Chrome 账号跨设备同步；本页拦截计数仅在扩展内部临时处理。项目主页与反馈链接仅在用户主动点击后访问 GitHub。
+
+权限用途：`storage` 用于保存设置，`activeTab` 用于 Popup 查询和操作当前页面，`webNavigation` 用于页面导航时清理旧计数。
+
 ## 不定期更新&维护
+
+### 2026-08-25 更新
+
+1. 产品名统一为 **Ad Terminator**
+2. Popup 增加当前站点、运行状态和详细拦截统计
+3. 增加临时显示已拦截搜索结果功能
+4. 站点开关支持跨标签页同步
+5. 增加项目主页、误拦截反馈和隐私说明入口
 
 ### 2026-08-24 更新
 

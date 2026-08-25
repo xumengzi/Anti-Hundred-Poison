@@ -8,6 +8,7 @@
   const AHP = (window.__AHP__ = window.__AHP__ || {});
   const HIDE_ATTR = "data-ahp-hidden";
   const DONE_ATTR = "data-ahp-done";
+  let revealMode = false;
 
   function buildCleaner({
     selector,
@@ -44,7 +45,7 @@
       }
 
       function hide(el) {
-        if (el.getAttribute(HIDE_ATTR)) return;
+        if (revealMode || el.getAttribute(HIDE_ATTR)) return;
         el.setAttribute(HIDE_ATTR, "1");
         el.style.setProperty("display", "none", "important");
         AHP.counter && AHP.counter.add(1);
@@ -60,15 +61,31 @@
     };
   }
 
-  // 提供恢复能力：临时显示所有被本插件隐藏的节点
+  // 临时显示当前页的动态搜索结果；刷新页面后自动恢复净化。
   function unhideAll() {
+    revealMode = true;
     const list = document.querySelectorAll("[" + HIDE_ATTR + "]");
     list.forEach((el) => {
       el.style.removeProperty("display");
       el.removeAttribute(HIDE_ATTR);
     });
+    if (AHP.counter) AHP.counter.setDynamic(0);
     return list.length;
   }
 
-  AHP.cleaner = { buildCleaner, unhideAll, HIDE_ATTR };
+  function getHiddenCount() {
+    return document.querySelectorAll("[" + HIDE_ATTR + "]").length;
+  }
+
+  function isRevealMode() {
+    return revealMode;
+  }
+
+  AHP.cleaner = {
+    buildCleaner,
+    unhideAll,
+    getHiddenCount,
+    isRevealMode,
+    HIDE_ATTR,
+  };
 })();

@@ -2,31 +2,51 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <title>广告终结者</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ad Terminator</title>
     <link rel="stylesheet" href="styles/popup.css" />
   </head>
   <body>
-    <div id="app">
-      <header>
-        <h2>消灭百度广告</h2>
-        <div class="stat">
-          本页已屏蔽 <span id="count">0</span> 条
-          <span id="countDetail" class="muted"></span>
+    <main id="app">
+      <header class="brand">
+        <div>
+          <h1>Ad Terminator</h1>
+          <p>搜索结果净化工具</p>
         </div>
+        <span id="status" class="status status--loading">正在检测</span>
       </header>
 
-      <section class="row">
+      <section class="site-card" aria-label="当前站点状态">
+        <div>
+          <div id="siteName" class="site-name">正在读取当前页面</div>
+          <div id="siteHost" class="site-host"></div>
+        </div>
         <label class="switch">
-          <input type="checkbox" id="siteEnabled" />
-          <span>本站启用屏蔽</span>
+          <input type="checkbox" id="siteEnabled" disabled />
+          <span class="switch-track" aria-hidden="true"></span>
+          <span id="switchText">本站净化</span>
         </label>
       </section>
 
+      <section class="stat-card" aria-label="本页净化统计">
+        <div class="stat-label">本页已拦截</div>
+        <div class="stat-value"><span id="count">—</span><small>条</small></div>
+        <div id="countDetail" class="muted">正在读取页面统计</div>
+      </section>
+
+      <button id="revealResults" class="secondary-button" type="button" disabled>
+        临时显示已拦截的搜索结果
+      </button>
+      <p class="action-note">仅影响当前页面，刷新后恢复净化</p>
+
+      <div id="tip" role="status" aria-live="polite"></div>
+
       <footer>
-        <div id="tip"></div>
-        <div class="muted">仅在受支持的搜索引擎生效</div>
+        <a href="https://github.com/xumengzi/Anti-Hundred-Poison" target="_blank" rel="noopener noreferrer">项目主页</a>
+        <a href="https://github.com/xumengzi/Anti-Hundred-Poison/issues/new" target="_blank" rel="noopener noreferrer">反馈误拦截</a>
+        <a href="https://github.com/xumengzi/Anti-Hundred-Poison#隐私说明" target="_blank" rel="noopener noreferrer">隐私说明</a>
       </footer>
-    </div>
+    </main>
     <script src="scripts/popup.js"></script>
   </body>
 </html>

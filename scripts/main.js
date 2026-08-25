@@ -21,18 +21,41 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
   };
   const siteKey = SITE_MAP[HOST];
   if (!siteKey) return;
+  let runtimeStatus = "initializing";
+
+  // 同一站点的开关变化时，各标签页自行刷新，避免申请额外 tabs 权限。
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "sync" || !changes.perSite) return;
+    const oldSites = changes.perSite.oldValue || {};
+    const newSites = changes.perSite.newValue || {};
+    const wasEnabled = !oldSites[HOST] || oldSites[HOST].enabled !== false;
+    const isEnabled = !newSites[HOST] || newSites[HOST].enabled !== false;
+    if (wasEnabled !== isEnabled) location.reload();
+  });
 
   // 尽早注册消息监听，避免 popup 打开时监听器还没挂上
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (!msg) return;
     if (msg.type === "AHP_UNHIDE_ALL") {
       const n = AHP.cleaner ? AHP.cleaner.unhideAll() : 0;
-      sendResponse({ ok: true, n });
+      const stat = AHP.counter
+        ? AHP.counter.get()
+        : { total: 0, dynamic: 0, staticCount: 0 };
+      sendResponse({ ok: true, n, stat, revealing: true });
       return; // 同步响应
     }
     if (msg.type === "AHP_QUERY_COUNT") {
-      const c = AHP.counter ? AHP.counter.get() : { total: 0, dynamic: 0, staticCount: 0 };
-      sendResponse(c);
+      if (AHP.cleaner && AHP.counter) {
+        AHP.counter.setDynamic(AHP.cleaner.getHiddenCount());
+      }
+      const c = AHP.counter
+        ? AHP.counter.get()
+        : { total: 0, dynamic: 0, staticCount: 0 };
+      sendResponse({
+        ...c,
+        status: runtimeStatus,
+        revealing: AHP.cleaner ? AHP.cleaner.isRevealMode() : false,
+      });
       return;
     }
   });
@@ -47,6 +70,7 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
         AHP.settings.getAll(),
       ]);
     } catch (e) {
+      runtimeStatus = "error";
       console.warn("[AHP] load rules failed:", e);
       return;
     }
@@ -55,6 +79,7 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
 
     // 2. 若本站被关闭：移除根 class 让静态 CSS 失效，计数归零，直接返回
     if (!enabled) {
+      runtimeStatus = "disabled";
       AHP.settings.setEnabledOnRoot(false);
       if (AHP.counter) AHP.counter.setStatic(0);
       console.log(AHP_TAG, AHP_STYLE, "site disabled by user");
@@ -78,7 +103,15 @@ const AHP_STYLE = "color:#fff;background:#e74c3c;padding:1px 6px;border-radius:3
     // 5. 分发到站点模块
     const runner = AHP.sites && AHP.sites[siteKey];
     if (typeof runner === "function") {
-      runner({ rules, selectors, blackReg, whiteReg, settings });
+      try {
+        runner({ rules, selectors, blackReg, whiteReg, settings });
+        runtimeStatus = "ready";
+      } catch (error) {
+        runtimeStatus = "error";
+        console.warn("[AHP] site runner failed:", error);
+      }
+    } else {
+      runtimeStatus = "error";
     }
   });
 })();

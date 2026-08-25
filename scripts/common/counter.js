@@ -31,7 +31,12 @@
   }
 
   function add(n = 1) {
-    dynamic += n;
+    dynamic = Math.max(0, dynamic + Number(n || 0));
+    schedule();
+  }
+
+  function setDynamic(n) {
+    dynamic = Math.max(0, Number(n || 0));
     schedule();
   }
 
@@ -44,5 +49,5 @@
     return { total: dynamic + staticCount, dynamic, staticCount };
   }
 
-  AHP.counter = { add, setStatic, get };
+  AHP.counter = { add, setDynamic, setStatic, get };
 })();

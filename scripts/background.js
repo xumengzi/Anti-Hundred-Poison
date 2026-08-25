@@ -41,9 +41,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.type === "AHP_GET_COUNT") {
-    const id = msg.tabId;
-    const stat = tabStats.get(id) || { total: 0, dynamic: 0, staticCount: 0 };
-    sendResponse({ count: stat.total, stat });
+    const stat = tabStats.get(msg.tabId) || null;
+    sendResponse({ count: stat ? stat.total : null, stat });
     return true;
   }
 });

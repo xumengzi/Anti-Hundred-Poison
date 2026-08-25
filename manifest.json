@@ -1,8 +1,9 @@
 {
   "name": "Ad Terminator",
-  "version": "1.4",
+  "version": "1.5",
   "manifest_version": 3,
-  "description": "广告终结者",
+  "description": "Ad Terminator：轻量、安全的搜索结果净化工具",
+  "homepage_url": "https://github.com/xumengzi/Anti-Hundred-Poison",
   "icons": {
     "128": "icon_128.png"
   },

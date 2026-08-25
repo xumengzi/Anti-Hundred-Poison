@@ -1,4 +1,4 @@
-/* Anti-Hundred-Poison 静态隐藏样式
+/* Ad Terminator 静态隐藏样式
  * 在 document_start 阶段就注入，避免广告闪现。
  * 所有规则限定在 html.ahp-on 下，用户在 popup 关闭本站后，
  * content script 会移除该 class，静态 CSS 自动失效。

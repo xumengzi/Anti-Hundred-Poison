@@ -1,12 +1,11 @@
-// Popup 逻辑：显示屏蔽计数 + 本站启用开关
-// 注：storage 里保留 customKeywords / whitelist 字段（下期迭代使用）
+// Ad Terminator Popup：站点状态、拦截统计与本站开关
 
-const SUPPORTED_HOSTS = [
-  "www.baidu.com",
-  "www.bing.com",
-  "www.so.com",
-  "www.sogou.com",
-];
+const SITES = {
+  "www.baidu.com": "百度搜索",
+  "www.bing.com": "Bing 搜索",
+  "www.so.com": "360 搜索",
+  "www.sogou.com": "搜狗搜索",
+};
 
 const DEFAULT_SETTINGS = {
   perSite: {
@@ -19,25 +18,52 @@ const DEFAULT_SETTINGS = {
   whitelist: [],
 };
 
+const state = {
+  tabId: null,
+  host: "",
+  supported: false,
+  enabled: false,
+  contentReady: false,
+  runtimeStatus: "unavailable",
+  revealing: false,
+  stat: null,
+};
+
 const $ = (id) => document.getElementById(id);
+let tipTimer = null;
 
 function getCurrentTab() {
   return new Promise((resolve) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      void chrome.runtime.lastError;
       resolve(tabs && tabs[0]);
     });
   });
 }
 
 function getSettings() {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(DEFAULT_SETTINGS, resolve);
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.get(DEFAULT_SETTINGS, (result) => {
+      const error = chrome.runtime.lastError;
+      if (error) {
+        reject(new Error(error.message));
+        return;
+      }
+      resolve(result || DEFAULT_SETTINGS);
+    });
   });
 }
 
 function setSettings(patch) {
-  return new Promise((resolve) => {
-    chrome.storage.sync.set(patch, resolve);
+  return new Promise((resolve, reject) => {
+    chrome.storage.sync.set(patch, () => {
+      const error = chrome.runtime.lastError;
+      if (error) {
+        reject(new Error(error.message));
+        return;
+      }
+      resolve();
+    });
   });
 }
 
@@ -51,102 +77,232 @@ function hostOfTab(tab) {
 
 function showTip(text, ok = true) {
   const el = $("tip");
-  el.style.color = ok ? "#27ae60" : "#e74c3c";
+  clearTimeout(tipTimer);
+  el.classList.toggle("tip--error", !ok);
   el.textContent = text;
-  setTimeout(() => (el.textContent = ""), 1500);
+  tipTimer = setTimeout(() => {
+    el.textContent = "";
+    el.classList.remove("tip--error");
+  }, 3000);
 }
 
-// 向 content script 请求计数，带超时；超时或未响应则回退到 background
-function queryCountFromTab(tabId, timeout = 300) {
+function queryCountFromTab(tabId, timeout = 500) {
   return new Promise((resolve) => {
-    let done = false;
-    const finish = (v) => {
-      if (done) return;
-      done = true;
-      resolve(v);
+    let settled = false;
+    const timer = setTimeout(() => finish(null), timeout);
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve(value);
     };
+
     try {
       chrome.tabs.sendMessage(tabId, { type: "AHP_QUERY_COUNT" }, (res) => {
-        void chrome.runtime.lastError;
-        if (res && typeof res.total === "number") finish(res);
-        else finish(null);
+        const error = chrome.runtime.lastError;
+        if (error || !res || typeof res.total !== "number") {
+          finish(null);
+          return;
+        }
+        finish(res);
       });
     } catch {
       finish(null);
     }
-    setTimeout(() => finish(null), timeout);
   });
 }
 
-function queryStatFromBg(tabId) {
+function queryStatFromBackground(tabId) {
   return new Promise((resolve) => {
-    chrome.runtime.sendMessage(
-      { type: "AHP_GET_COUNT", tabId },
-      (res) => {
-        void chrome.runtime.lastError;
-        resolve((res && res.stat) || null);
-      }
-    );
+    chrome.runtime.sendMessage({ type: "AHP_GET_COUNT", tabId }, (res) => {
+      void chrome.runtime.lastError;
+      resolve((res && res.stat) || null);
+    });
   });
 }
 
-function renderCount(stat) {
-  const s = stat || { total: 0, dynamic: 0, staticCount: 0 };
-  $("count").textContent = s.total || 0;
-  $("countDetail").textContent = `（页面元素 ${s.staticCount || 0} + 搜索结果 ${s.dynamic || 0}）`;
+function revealResultsInTab(tabId) {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tabId, { type: "AHP_UNHIDE_ALL" }, (res) => {
+      const error = chrome.runtime.lastError;
+      if (error) {
+        reject(new Error(error.message));
+        return;
+      }
+      if (!res || !res.ok) {
+        reject(new Error("页面未响应"));
+        return;
+      }
+      resolve(res);
+    });
+  });
+}
+
+function setStatus(text, modifier) {
+  const el = $("status");
+  el.textContent = text;
+  el.className = `status status--${modifier}`;
+}
+
+function render() {
+  const siteEnabled = $("siteEnabled");
+  const revealButton = $("revealResults");
+
+  if (!state.supported) {
+    $("siteName").textContent = "当前网站暂不支持";
+    $("siteHost").textContent = state.host || "浏览器内部页面";
+    setStatus("不支持", "unsupported");
+  } else {
+    $("siteName").textContent = SITES[state.host];
+    $("siteHost").textContent = state.host;
+    if (!state.enabled || state.runtimeStatus === "disabled") {
+      setStatus("已暂停", "paused");
+    } else if (state.runtimeStatus === "ready") {
+      setStatus("保护中", "active");
+    } else if (state.runtimeStatus === "error") {
+      setStatus("加载失败", "unsupported");
+    } else if (state.runtimeStatus === "initializing") {
+      setStatus("初始化中", "waiting");
+    } else {
+      setStatus("等待页面", "waiting");
+    }
+  }
+
+  siteEnabled.checked = state.supported && state.enabled;
+  siteEnabled.disabled = !state.supported;
+  $("switchText").textContent = state.enabled ? "本站净化" : "本站已暂停";
+
+  if (!state.supported) {
+    $("count").textContent = "—";
+    $("countDetail").textContent = "仅支持百度、Bing、360 和搜狗搜索";
+  } else if (!state.stat) {
+    $("count").textContent = "—";
+    $("countDetail").textContent = state.contentReady
+      ? "正在统计"
+      : "页面尚未就绪，请刷新后重试";
+  } else {
+    $("count").textContent = String(state.stat.total || 0);
+    $("countDetail").textContent = `页面元素 ${state.stat.staticCount || 0} · 搜索结果 ${state.stat.dynamic || 0}`;
+  }
+
+  const dynamicCount = state.stat ? state.stat.dynamic || 0 : 0;
+  revealButton.disabled =
+    !state.supported ||
+    !state.enabled ||
+    !state.contentReady ||
+    state.revealing ||
+    dynamicCount === 0;
+  revealButton.textContent = state.revealing
+    ? "已临时显示搜索结果"
+    : "临时显示已拦截的搜索结果";
+}
+
+async function handleSiteToggle(event) {
+  const input = event.currentTarget;
+  const requested = input.checked;
+  const previous = state.enabled;
+  input.disabled = true;
+  $("switchText").textContent = "正在保存";
+
+  try {
+    const latest = await getSettings();
+    const perSite = {
+      ...DEFAULT_SETTINGS.perSite,
+      ...(latest.perSite || {}),
+      [state.host]: { enabled: requested },
+    };
+    await setSettings({ perSite });
+    state.enabled = requested;
+    render();
+    showTip(requested ? "已开启，相关页面正在同步" : "已暂停，相关页面正在同步");
+  } catch (error) {
+    state.enabled = previous;
+    render();
+    showTip("设置保存失败，请重试", false);
+  }
+}
+
+async function handleRevealResults() {
+  const button = $("revealResults");
+  button.disabled = true;
+  button.textContent = "正在显示…";
+
+  try {
+    const result = await revealResultsInTab(state.tabId);
+    state.revealing = true;
+    if (result.stat) state.stat = result.stat;
+    render();
+    showTip(
+      result.n > 0
+        ? `已临时显示 ${result.n} 条搜索结果`
+        : "当前没有可显示的搜索结果"
+    );
+  } catch (error) {
+    render();
+    showTip("无法连接当前页面，请刷新后重试", false);
+  }
 }
 
 async function init() {
   const tab = await getCurrentTab();
-  const host = hostOfTab(tab);
-  const supported = SUPPORTED_HOSTS.includes(host);
-  const settings = await getSettings();
-  const tabId = tab && tab.id;
+  state.tabId = tab && tab.id != null ? tab.id : null;
+  state.host = hostOfTab(tab);
+  state.supported = Object.prototype.hasOwnProperty.call(SITES, state.host);
 
-  // 1. 计数：优先从 content script 拿最新的，拿不到则回退 background 缓存
-  let stat = null;
-  if (supported && tabId != null) {
-    stat = await queryCountFromTab(tabId);
-    if (!stat) stat = await queryStatFromBg(tabId);
+  let settings = DEFAULT_SETTINGS;
+  try {
+    settings = await getSettings();
+  } catch {
+    showTip("读取设置失败，请重试", false);
   }
-  renderCount(stat);
 
-  // 1.1 订阅后续更新：content script 完成清理后会通过 background 广播新计数
-  //     解决 popup 打开过早、此时 content 尚未完成统计导致显示 0 的问题
-  if (supported && tabId != null) {
-    chrome.runtime.onMessage.addListener((msg) => {
-      if (
-        msg &&
-        msg.type === "AHP_COUNT_UPDATE" &&
-        msg.tabId === tabId &&
-        msg.stat
-      ) {
-        renderCount(msg.stat);
+  const site = settings.perSite && settings.perSite[state.host];
+  state.enabled = state.supported && (!site || site.enabled !== false);
+
+  if (state.supported && state.tabId != null) {
+    const liveStat = await queryCountFromTab(state.tabId);
+    state.runtimeStatus = liveStat ? liveStat.status || "initializing" : "unavailable";
+    state.contentReady = state.runtimeStatus === "ready";
+    state.revealing = Boolean(liveStat && liveStat.revealing);
+    state.stat = liveStat || (await queryStatFromBackground(state.tabId));
+  }
+
+  render();
+  $("siteEnabled").addEventListener("change", handleSiteToggle);
+  $("revealResults").addEventListener("click", handleRevealResults);
+
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (
+      msg &&
+      msg.type === "AHP_COUNT_UPDATE" &&
+      msg.tabId === state.tabId &&
+      msg.stat
+    ) {
+      state.stat = msg.stat;
+      if (state.runtimeStatus === "initializing") {
+        queryCountFromTab(state.tabId).then((liveStat) => {
+          if (!liveStat) return;
+          state.runtimeStatus = liveStat.status || state.runtimeStatus;
+          state.contentReady = state.runtimeStatus === "ready";
+          state.revealing = Boolean(liveStat.revealing);
+          state.stat = liveStat;
+          render();
+        });
       }
-    });
-  }
+      render();
+    }
+  });
 
-  // 2. 本站开关：勾选即时保存并刷新
-  const siteEnabled = $("siteEnabled");
-  if (supported) {
-    const site = settings.perSite[host] || { enabled: true };
-    siteEnabled.checked = site.enabled !== false;
-    siteEnabled.disabled = false;
-    siteEnabled.addEventListener("change", async () => {
-      const next = {
-        perSite: {
-          ...settings.perSite,
-          [host]: { enabled: siteEnabled.checked },
-        },
-      };
-      await setSettings(next);
-      showTip(siteEnabled.checked ? "已开启，正在刷新" : "已关闭，正在刷新");
-      if (tabId != null) chrome.tabs.reload(tabId);
-    });
-  } else {
-    siteEnabled.checked = false;
-    siteEnabled.disabled = true;
-  }
+  chrome.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName !== "sync" || !changes.perSite || !state.supported) return;
+    const next = changes.perSite.newValue || {};
+    const siteConfig = next[state.host];
+    state.enabled = !siteConfig || siteConfig.enabled !== false;
+    render();
+  });
 }
 
-init();
+init().catch(() => {
+  setStatus("读取失败", "unsupported");
+  showTip("Popup 初始化失败，请重新打开", false);
+});
