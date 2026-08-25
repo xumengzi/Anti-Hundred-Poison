@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1220" />
+    <meta
+      name="description"
+      content="Ad Terminator 是一款轻量、开源的 Chrome 搜索结果净化扩展，支持百度、Bing、360 搜索与搜狗搜索。"
+    />
+    <meta property="og:title" content="Ad Terminator · 还搜索引擎一片清净" />
+    <meta
+      property="og:description"
+      content="本地过滤广告、推广和低质量搜索结果，不收集搜索内容。"
+    />
+    <meta property="og:image" content="https://anti-hundred-poison.vercel.app/imgs/4.png" />
+    <title>Ad Terminator · 搜索结果净化工具</title>
+    <link rel="icon" href="icon_128.png" />
+    <link rel="stylesheet" href="styles/index.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Ad Terminator 首页">
+        <img src="icon_128.png" width="38" height="38" alt="" />
+        <span>Ad Terminator</span>
+      </a>
+      <nav aria-label="主导航">
+        <a href="#features">功能</a>
+        <a href="#preview">效果</a>
+        <a href="#install">安装</a>
+        <a href="#privacy">隐私</a>
+      </nav>
+      <a
+        class="header-link"
+        href="https://github.com/xumengzi/Anti-Hundred-Poison"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <div class="eyebrow"><span></span> OPEN SOURCE · MANIFEST V3</div>
+          <h1>搜索，本该只有<br /><em>真正有用的结果。</em></h1>
+          <p class="hero-lead">
+            Ad Terminator 在本地净化搜索页面，隐藏广告、推广和你不想看到的低质量内容，让每一次搜索更干净、更专注。
+          </p>
+          <div class="hero-actions">
+            <a
+              class="button button-primary"
+              href="https://github.com/xumengzi/Anti-Hundred-Poison/archive/refs/heads/master.zip"
+            >
+              下载 Chrome 扩展
+            </a>
+            <a
+              class="button button-secondary"
+              href="https://github.com/xumengzi/Anti-Hundred-Poison"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              查看源代码
+            </a>
+          </div>
+          <div class="trust-row" aria-label="产品特点">
+            <span>完全免费</span>
+            <span>本地处理</span>
+            <span>无需账号</span>
+            <span>持续维护</span>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="glow glow-one"></div>
+          <div class="glow glow-two"></div>
+          <div class="browser-card">
+            <div class="browser-bar">
+              <div class="traffic-lights"><i></i><i></i><i></i></div>
+              <div class="address-bar">www.baidu.com/s?wd=javascript</div>
+              <div class="shield">A</div>
+            </div>
+            <div class="search-demo">
+              <div class="search-input">
+                <span>JavaScript 教程</span><b>搜索</b>
+              </div>
+              <div class="clean-label">已为你净化搜索结果</div>
+              <article class="result-card">
+                <span class="result-index">01</span>
+                <div><h3>JavaScript 教程与参考手册</h3><p>清晰、实用的学习资料，直接呈现真正有价值的搜索结果。</p><small>developer.example.com</small></div>
+              </article>
+              <article class="result-card result-card-muted">
+                <span class="result-index">02</span>
+                <div><h3>现代 JavaScript 完整指南</h3><p>从语言基础到浏览器 API 的系统教程。</p><small>docs.example.org</small></div>
+              </article>
+            </div>
+          </div>
+
+          <div class="popup-preview">
+            <div class="popup-head">
+              <div><strong>Ad Terminator</strong><span>搜索结果净化工具</span></div>
+              <b>保护中</b>
+            </div>
+            <div class="popup-site"><span>百度搜索<small>www.baidu.com</small></span><i></i></div>
+            <div class="popup-count"><span>本页已拦截</span><strong>15<small> 条</small></strong><p>页面元素 10 · 搜索结果 5</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="engine-strip" aria-label="支持的搜索引擎">
+        <span>支持主流搜索引擎</span>
+        <strong>百度</strong>
+        <i></i>
+        <strong>Bing</strong>
+        <i></i>
+        <strong>360 搜索</strong>
+        <i></i>
+        <strong>搜狗搜索</strong>
+      </section>
+
+      <section id="features" class="section section-shell">
+        <div class="section-heading">
+          <span>CORE FEATURES</span>
+          <h2>轻量，但不将就</h2>
+          <p>不改变搜索引擎，只在页面本地完成识别、隐藏与恢复。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card feature-card-primary">
+            <div class="feature-icon">01</div>
+            <h3>净化搜索结果</h3>
+            <p>识别广告、推广以及命中规则的低质量结果，动态加载和翻页后依然持续生效。</p>
+            <div class="rule-demo"><span>推广结果</span><span>低质聚合</span><span>自有产品</span></div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">02</div>
+            <h3>按站点自由开关</h3>
+            <p>每个搜索引擎独立控制，状态会同步到同站点的其他标签页。</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">03</div>
+            <h3>随时临时恢复</h3>
+            <p>误拦截时一键显示当前页面的搜索结果，刷新后自动恢复净化。</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">04</div>
+            <h3>透明的本页统计</h3>
+            <p>Popup 与角标实时展示页面元素和搜索结果的处理数量。</p>
+          </article>
+          <article class="feature-card feature-card-dark">
+            <div class="code-title"><span></span><span></span><span></span>privacy.js</div>
+            <pre><code><b>const</b> privacy = {
+  upload: <em>false</em>,
+  telemetry: <em>false</em>,
+  remoteCode: <em>false</em>,
+  process: <i>"local"</i>
+};</code></pre>
+            <h3>隐私优先</h3>
+            <p>不上传搜索词、页面正文或浏览记录，规则和设置由扩展在本地处理。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="preview" class="section preview-section">
+        <div class="section-shell">
+          <div class="section-heading section-heading-light">
+            <span>BEFORE / AFTER</span>
+            <h2>把注意力还给搜索本身</h2>
+            <p>减少页面噪音，让有用信息获得应有的位置。</p>
+          </div>
+          <div class="screenshot-frame">
+            <div class="screenshot-toolbar" aria-hidden="true">
+              <div><i></i><i></i><i></i></div>
+              <span>净化后的搜索结果</span>
+              <b>Ad Terminator · ON</b>
+            </div>
+            <img
+              src="imgs/4.png"
+              width="1080"
+              height="986"
+              loading="lazy"
+              alt="Ad Terminator 净化后的百度搜索结果"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="install" class="section section-shell install-section">
+        <div class="section-heading">
+          <span>GET STARTED</span>
+          <h2>三步开始清爽搜索</h2>
+          <p>Chrome 商店版本准备中，现在可通过开发者模式免费安装。</p>
+        </div>
+        <ol class="steps">
+          <li><span>1</span><div><h3>下载项目</h3><p>下载 ZIP 并解压到一个固定目录。</p></div></li>
+          <li><span>2</span><div><h3>打开扩展管理</h3><p>进入 <code>chrome://extensions/</code>，开启“开发者模式”。</p></div></li>
+          <li><span>3</span><div><h3>加载扩展</h3><p>点击“加载已解压的扩展程序”，选择刚才的项目目录。</p></div></li>
+        </ol>
+        <div class="install-actions">
+          <a
+            class="button button-primary"
+            href="https://github.com/xumengzi/Anti-Hundred-Poison/archive/refs/heads/master.zip"
+          >下载最新版本</a>
+          <a
+            class="text-link"
+            href="https://github.com/xumengzi/Anti-Hundred-Poison#安装方法"
+            target="_blank"
+            rel="noopener noreferrer"
+          >查看完整安装说明 →</a>
+        </div>
+      </section>
+
+      <section id="privacy" class="section section-shell privacy-section">
+        <div class="privacy-card">
+          <div>
+            <span class="privacy-mark">LOCAL FIRST</span>
+            <h2>你的搜索内容，只属于你</h2>
+            <p>
+              Ad Terminator 没有遥测、广告 SDK 或远程代码。页面内容仅用于当前标签页中的规则匹配；站点开关保存在 Chrome 同步存储中。
+            </p>
+          </div>
+          <ul>
+            <li><i></i>不收集搜索词</li>
+            <li><i></i>不上传浏览记录</li>
+            <li><i></i>不开启远程代码</li>
+            <li><i></i>源代码完全公开</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="faq section-shell">
+        <div class="section-heading compact"><span>FAQ</span><h2>常见问题</h2></div>
+        <div class="faq-list">
+          <details><summary>它会修改搜索引擎的数据吗？</summary><p>不会。扩展只在你的浏览器中隐藏或恢复页面元素，不会修改搜索引擎服务器上的任何数据。</p></details>
+          <details><summary>为什么暂时不能从 Chrome 商店安装？</summary><p>商店版本仍在准备中。目前可以从 GitHub 下载源码，通过 Chrome 开发者模式加载。</p></details>
+          <details><summary>四个搜索引擎的能力完全一样吗？</summary><p>百度和 Bing 支持页面净化与动态结果过滤；360 搜索和搜狗搜索目前提供基础页面净化。</p></details>
+          <details><summary>遇到误拦截怎么办？</summary><p>可以在 Popup 中临时显示本页结果，或前往 GitHub Issues 提交误拦截反馈。</p></details>
+        </div>
+      </section>
+
+      <section class="final-cta section-shell">
+        <div>
+          <span>AD TERMINATOR</span>
+          <h2>下一次搜索，从清净开始。</h2>
+          <p>免费、开源、本地运行。</p>
+        </div>
+        <a
+          class="button button-light"
+          href="https://github.com/xumengzi/Anti-Hundred-Poison/archive/refs/heads/master.zip"
+        >立即下载</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <a class="brand footer-brand" href="#top"><img src="icon_128.png" width="32" height="32" alt="" /><span>Ad Terminator</span></a>
+      <p>还搜索引擎一片清净。</p>
+      <div>
+        <a href="https://github.com/xumengzi/Anti-Hundred-Poison" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://github.com/xumengzi/Anti-Hundred-Poison/issues/new" target="_blank" rel="noopener noreferrer">反馈问题</a>
+        <a href="#privacy">隐私说明</a>
+        <a href="LICENSE">开源许可</a>
+      </div>
+    </footer>
+  </body>
+</html>
